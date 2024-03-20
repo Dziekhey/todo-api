@@ -1,57 +1,28 @@
 import { Router} from "express";
-import { MongoClient } from "mongodb";
-import dotenv from "dotenv"
+import { Todo } from "../models/todo.js";
 
-dotenv.config({path:['.env.local']})
 
 const router = Router();
-const url = process.env.MONGO_URI;
-const client = new MongoClient(url);
-const todoDb = 'todo-db';
-const todoCollection = 'todos';
+
 
 // Define routes
 router.post('/todos', async (req, res) => {
-    //Connect the mongo client
-    await client.connect();
-    // Get access to a database
-    const db = client.db(todoDb);
-    // Get access to todos collection in the database
-    const collection = db.collection(todoCollection);
     // Add todo to the todos collection
-    const result = await collection.insertOne(req.body);
-    // Disconnect the mongo client
-    await client.close();
+    const result = await Todo.create(req.body);
     // Return response
     res.json(result);
 });
 
 router.get('/todos', async (req, res) => {
-    //Connect the mongo client
-    await client.connect();
-    // Get access to a database
-    const db = client.db(todoDb);
-    // Get access to todos collection in the database
-    const collection = db.collection(todoCollection);
     // Get all todos from todos collection
-    const result = await collection.find().toArray();
-    // Disconnect the mongo client
-    await client.close();
+    const result = await Todo.find({});
     // Return response
     res.json(result);
 });
 
 router.delete('/todos', async (req, res) => {
-    //Connect the mongo client
-    await client.connect();
-    // Get access to a database
-    const db = client.db(todoDb);
-    // Get access to todos collection in the database
-    const collection = db.collection(todoCollection);
     // Delete todos from todos collection
-    const deleteManyResult = await collection.deleteMany({});
-    // Disconnect the mongo client
-    await client.close();
+    const deleteManyResult = await Todo.deleteMany({});
     // Return response
     res.json(deleteManyResult);
 });
