@@ -27,17 +27,22 @@ router.delete('/todos', async (req, res) => {
     res.json(deleteManyResult);
 });
 
-router.get('/todos/:id', (req, res) => {
-    res.send(`Get single todos with id: ${req.params.id}!`);
+router.delete('/todos/:id', async (req, res) => {
+   // Get a todo by id
+   const findByIdResult = await Todo.findById(req.params.id);
+   // Delete a todo from todos collection
+   const deleteResult = await findByIdResult.deleteOne();
+   // Return response
+   res.json(deleteResult);
 });
 
 router.patch('/todos/:id', (req, res) => {
     res.send('Update single todos!');
 });
 
-router.delete('/todos/:id', (req, res) => {
-    res.send('Delete single todos!');
-});
+// router.delete('/todos/:id', (req, res) => {
+//     res.send('Delete single todos!');
+// });
 
 
 
